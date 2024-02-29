@@ -1,0 +1,167 @@
+{
+	"info": {
+		"_postman_id": "3d5b4b1b-cd79-40fe-a607-a499e9773ebe",
+		"name": "IHRM0712",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26939528",
+		"_collection_link": "https://galactic-crescent-412887.postman.co/workspace/springmvc~868ba5ab-cca5-4449-9700-502c6480e3b3/collection/26939528-3d5b4b1b-cd79-40fe-a607-a499e9773ebe?source=collection_link"
+	},
+	"item": [
+		{
+			"name": "登录",
+			"item": [
+				{
+					"name": "登录成功",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//\"断言message的值包含【操作成功】\"",
+									"pm.test(\"断言message的值包含【操作成功】\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"操作成功\");",
+									"});",
+									"",
+									"//选择环境变量来存放token值，通过关联来解决员工管理接口和登录接口之间的关联关系",
+									"pm.environment.set(\"env_token\", \"Bearer \" + pm.response.json().data);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mobie\": \"13800000002\",\n    \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sys/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sys",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "员工管理",
+			"item": [
+				{
+					"name": "添加员工",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//断言响应体重包含【操作成功】",
+									"pm.test(\"断言响应体中包含【操作成功】\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"操作成功\");",
+									"});",
+									"",
+									"//将员工id保存到环境变量中，方便后续查询、修改、删除使用",
+									"pm.environment.set(\"env_id\", pm.response.json().data.id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json;charset=UTF-8",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{env_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"jack0709t2\",\n    \"mobile\": \"13212332170\",\n    \"timeOfEntry\": \"2020-07-09\",\n    \"formOfEmployment\": 1,\n    \"workNumber\": \"10086\",\n    \"departmentName\": \"销售\",\n    \"departmentId\": \"1266699057968001024\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/sys/user",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sys",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "查询员工",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"//断言响应数据中包含【响应成功】",
+									"pm.test(\"断言响应数据中包含【操作成功】\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"操作成功\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "{{env_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/sys/user/{{env_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"sys",
+								"user",
+								"{{env_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "部门管理",
+			"item": []
+		}
+	]
+}
